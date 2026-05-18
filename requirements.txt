@@ -1,0 +1,20 @@
+# Inference + UI — CPU only, Python 3.12, pinned to the VERIFIED working set
+# (this exact combination runs the pipeline on the target box).
+# OpenCV: contrib ONLY (provides wechat_qrcode); do NOT also install
+# opencv-python (it shadows contrib).
+
+numpy==2.4.5
+opencv-contrib-python==4.11.0.86
+av==17.0.1                       # PyAV bundles ffmpeg (no system ffmpeg)
+pillow==12.2.0
+pyyaml==6.0.3
+tqdm==4.67.3
+
+onnxruntime==1.26.0              # detector ONNX + RapidOCR backend
+rapidocr-onnxruntime==1.4.4      # PP-OCR on onnxruntime (Cyrillic via models/)
+zxing-cpp==3.0.0                 # barcode/QR (Apache-2.0)
+
+pandas==3.0.3                    # CSV / self-eval / UI table
+rapidfuzz==3.14.5                # fuzzy match (self-eval only)
+gradio==4.44.1                   # UI / Hugging Face Space
+huggingface_hub==0.25.2          # pinned: gradio 4.44 needs HfFolder API

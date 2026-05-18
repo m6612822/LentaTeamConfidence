@@ -1,0 +1,32 @@
+# weights are downloaded by scripts/download_weights.sh, never committed
+models/
+# dataset from Google Drive, never committed
+data/
+# pipeline outputs / debug artifacts
+out*.csv
+runs/
+debug/
+*.log
+*.output
+debug_*.png
+diag_*.png
+fuse_*.png
+verify_*.png
+*_download.log
+# NOTE: scripts/_*.py are kept on purpose — reproducible EVIDENCE for the
+# README/presentation claims (decode ceiling, qr-visual map, fusion test).
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# os
+.DS_Store
+docs/_deck_full.png
+docs/_presentation_print.html
+docs/_qa_*.png

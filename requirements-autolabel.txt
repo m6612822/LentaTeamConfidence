@@ -1,0 +1,12 @@
+# OFFLINE auto-labeling + distillation. Run on a GPU machine (no GPU in target env).
+# This is NOT in the inference path. Output = ONNX weights -> models/.
+# Auto-labeling only (NO manual annotation) per ТЗ.
+
+torch==2.2.2                        # CPU build works but slow; GPU strongly advised
+torchvision==0.17.2
+transformers==4.44.2                # IDEA-Research/grounding-dino-tiny (Apache-2.0)
+supervision==0.22.0                 # pseudo-label IO / NMS / dataset export (MIT)
+pyyaml==6.0.2
+tqdm==4.66.5
+# D-FINE student training: cloned from github.com/Peterande/D-FINE (Apache-2.0)
+# — see scripts/autolabel_distill.py and README "Авторазметка".

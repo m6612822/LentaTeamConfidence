@@ -1,0 +1,61 @@
+# Regex / anchors / vocabularies — CALIBRATED to the real reference CSVs
+# (data/*/*.csv). Where semantics are still unknown they are marked TODO and
+# must be resolved by correlating GT against the decoded tag, NOT by manual
+# annotation (ТЗ-compliant: automatic analysis of provided data).
+
+anchors:                       # case-insensitive, accent/space tolerant
+  price_card:     ['С КАРТ', 'ПО КАРТЕ', 'КАРТА ЛОЯЛ', 'ЛОЯЛЬН', 'КАРТОЙ']
+  price_default:  ['ОБЫЧНАЯ', 'БЕЗ КАРТЫ', 'ЦЕНА']
+  price_discount: ['АКЦИ', 'СКИДКА', 'ВЫГОДА', 'СПЕЦЦЕНА', 'ПРОМО']
+  id_sku:         ['АРТ', 'АРТИКУЛ', 'КОД ТОВАРА']
+  barcode:        ['ШТРИХ', 'ШК', 'EAN']
+
+regex:
+  # GT prices appear with BOTH comma and dot decimals -> accept both.
+  price:        '(?<!\d)\d{1,6}[.,]\d{2}(?!\d)'
+  price_int:    '(?<!\d)\d{1,6}(?!\d)'        # big-ruble + superscript kopeck
+  barcode_ean:  '\b\d{13}\b'                  # EAN-13 (validate checksum)
+  id_sku:       '\b\d{12}\b'                  # GT: 12-digit (270207736530)
+  # print_datetime: GT "03.04.2026 3:08" (hour w/o leading zero, no seconds);
+  # sometimes empty in GT itself.
+  datetime:     '\b(\d{2})\.(\d{2})\.(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::\d{2})?)?'
+  discount_pct: '-?\s*\d{1,3}\s*%'            # GT discount_amount: "-48%"
+  # zone `code`: highly variable in GT: "01_025019", "01_025 009",
+  # "026005 - 026007", "025017 - 025018", "21_ЦПУ", "024 017_1_6_2".
+  # Permissive: digit-led token w/ optional _, space, dash, range, rare CYR.
+  zone_code:    '\b\d{2,3}[_ ]?\d{2,6}(?:\s*[-–]\s*\d{3,6})?(?:_[\dА-Я]+)*\b'
+
+# print_datetime OUTPUT format. %-H = hour no leading zero (Linux strftime).
+datetime_output: '%d.%m.%Y %-H:%M'
+
+# Tag background colour. GT `color` is ENGLISH lowercase. Observed: red,
+# yellow. Keep english; extend if other videos show more. Decided by MEDIAN
+# hue/sat of non-text/non-white background pixels of the crop. HSV (OpenCV
+# H:0-179). Ranges are initial — auto-tune thresholds against GT color labels.
+color_labels:
+  - {name: 'red',    h: [[0, 10], [170, 179]], s_min: 70}
+  - {name: 'yellow', h: [[18, 38]],            s_min: 70}
+  - {name: 'green',  h: [[40, 85]],            s_min: 50}
+  - {name: 'blue',   h: [[90, 130]],           s_min: 50}
+  - {name: 'white',  h: [[0, 179]],            s_max: 35, v_min: 170}
+
+# special_symbols: GT domain is SMALL categorical -> {К, Ш, нет} (single
+# Cyrillic letters), NOT display-type words. Semantics UNKNOWN.
+# TODO(Phase 0): correlate К vs Ш against decoded tag content / layout / QR
+# to derive an automatic rule (hypothesis: price unit штука vs кг, or tag
+# template class). Do NOT hand-label — derive the rule from data statistics.
+special_symbols_domain: ['К', 'Ш', 'нет']
+
+# additional_info: free text. GT examples: wine sweetness
+# (Сухое/Полусухое/Сладкое/Полусладкое), promo notes
+# ("...по цене 2 от цены без карты", "доп. скидка для участников соц.
+#  программы"), stock notes ("Упс! Товар закончился. Уже везём!").
+# Not a fixed pattern -> taken as descriptive leftover lines on the tag.
+additional_info_known_phrases:
+  - 'Сухое'
+  - 'Полусухое'
+  - 'Сладкое'
+  - 'Полусладкое'
+  - 'по цене'
+  - 'доп. скидка'
+  - 'Товар закончился'
