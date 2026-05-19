@@ -14,7 +14,7 @@ fuse_*.png
 verify_*.png
 *_download.log
 # NOTE: scripts/_*.py are kept on purpose — reproducible EVIDENCE for the
-# README/presentation claims (decode ceiling, qr-visual map, fusion test).
+# README claims (decode ceiling, qr-visual map, fusion test).
 
 # python
 __pycache__/
@@ -25,8 +25,8 @@ venv/
 .pytest_cache/
 .ipynb_checkpoints/
 
+# gradio runtime (flag dir / certs created on launch)
+.gradio/
+
 # os
 .DS_Store
-docs/_deck_full.png
-docs/_presentation_print.html
-docs/_qa_*.png

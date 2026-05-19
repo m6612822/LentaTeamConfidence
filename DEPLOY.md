@@ -3,10 +3,23 @@
 UI ([app.py](app.py)) работает локально и на HF Spaces без изменений.
 
 ## Локально
+
+> Зависимости ставить **строго** `pip install -r requirements.txt`, без
+> `-U`/`--upgrade`. Веб-стек жёстко запинён (gradio 5.50.0 + gradio-client/
+> fastapi/starlette/pydantic): gradio сам ограничивает их слишком слабо,
+> и при обновлении pip тянет starlette 1.0, несовместимый с gradio —
+> тогда UI отдаёт 500 на каждой странице.
+
 ```bash
 pip install -r requirements.txt
 bash scripts/download_weights.sh           # WeChat-QR + Cyrillic OCR
 PYTHONPATH=src python app.py               # http://localhost:7860
+```
+
+Публичная ссылка для демо без HF Spaces и без SSH-туннеля (`share=True`):
+```bash
+PYTHONPATH=src python -c "import app; app.demo.queue().launch(share=True)"
+# → https://<id>.gradio.live  (публичный URL, живёт ~1 неделю)
 ```
 
 ## Hugging Face Spaces (публичная ссылка, без авторизации)
@@ -31,7 +44,7 @@ emoji: 🏷️
 colorFrom: red
 colorTo: blue
 sdk: gradio
-sdk_version: 4.44.1
+sdk_version: 5.50.0
 app_file: app.py
 pinned: false
 ---

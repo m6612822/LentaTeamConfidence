@@ -16,5 +16,15 @@ zxing-cpp==3.0.0                 # barcode/QR (Apache-2.0)
 
 pandas==3.0.3                    # CSV / self-eval / UI table
 rapidfuzz==3.14.5                # fuzzy match (self-eval only)
-gradio==4.44.1                   # UI / Hugging Face Space
-huggingface_hub==0.25.2          # pinned: gradio 4.44 needs HfFolder API
+gradio==5.50.0                   # UI / Hugging Face Space
+gradio-client==1.14.0            # lockstep with gradio (gradio hard-pins it)
+huggingface_hub==1.15.0          # required by gradio 5.x
+
+# Web stack pinned EXPLICITLY. gradio's own bounds are too loose
+# (only fastapi<1.0), so pip otherwise pulls starlette 1.0 + a new
+# fastapi, which breaks gradio's TemplateResponse call (page 500s with
+# "unhashable type: 'dict'"). Lock the whole chain to the verified set.
+fastapi==0.136.1
+starlette==0.52.1
+pydantic==2.12.3
+uvicorn==0.47.0
