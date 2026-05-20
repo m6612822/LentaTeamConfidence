@@ -123,7 +123,8 @@ def main():
         dynamic_axes={"images": {0: "b", 2: "h", 3: "w"},
                       "boxes": {0: "n"}, "scores": {0: "n"},
                       "labels": {0: "n"}},
-        opset_version=17)
+        opset_version=17,
+        dynamo=False)
     print(f"exported -> {a.out}")
 
 
